@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDI Pro - Processador de Imagem</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Processador de Imagens</h1>
+        <p>Aritmética, Lógica, Transformações e Filtros Espaciais</p>
+    </header>
+
+    <div class="main-layout">
+        <aside class="controls">
+            <div class="upload-section">
+                <div class="drop-area" onclick="upload1.click()">
+                    <p>Imagem A</p>
+                    <input type="file" id="upload1" hidden>
+                </div>
+                <div class="drop-area" onclick="upload2.click()">
+                    <p>Imagem B</p>
+                    <input type="file" id="upload2" hidden>
+                </div>
+            </div>
+
+            <div class="constante-card">
+                <label>Constante (C): <b id="valC">128</b></label>
+                <input type="range" id="rangeC" min="0" max="255" value="128">
+            </div>
+
+            <div class="button-grid">
+                <h4>Aritméticas</h4>
+                <button onclick="executar('soma')">A + B</button>
+                <button onclick="executar('sub')">A - B</button>
+                <button onclick="executar('dif')">Diferença</button>
+                <button onclick="executar('media')">Média (Img)</button>
+                <button onclick="executar('blend')">Blending</button>
+                
+                <h4>Operações com C</h4>
+                <button onclick="executar('addC')">Brilho (+C)</button>
+                <button onclick="executar('subC')">Brilho (-C)</button>
+                <button onclick="executar('multC')">Contraste (*C)</button>
+                <button onclick="executar('divC')">Contraste (/C)</button>
+
+                <h4>Transformações</h4>
+                <button onclick="executar('gray')">Cinza</button>
+                <button onclick="executar('neg')">Negativo</button>
+                <button onclick="executar('flipH')">Espelhar H</button>
+                <button onclick="executar('flipV')">Espelhar V</button>
+                <button onclick="executar('threshold')">Limiar</button>
+                <button onclick="executar('histEq')">Equalizar</button>
+
+                <h4>Lógicas (Binárias)</h4>
+                <button onclick="executar('and')">AND</button>
+                <button onclick="executar('or')">OR</button>
+                <button onclick="executar('xor')">XOR</button>
+                <button onclick="executar('not')">NOT (A)</button>
+
+                <h4>Filtros (3x3)</h4>
+                <button onclick="executar('fMedia')">Média</button>
+                <button onclick="executar('fMin')">Mínimo</button>
+                <button onclick="executar('fMax')">Máximo</button>
+                <button onclick="executar('fMediana')">Mediana</button>
+            </div>
+
+            <div class="action-buttons">
+                <button class="discard" onclick="location.reload()">Limpar</button>
+                <button class="save" onclick="salvar()">Salvar</button>
+            </div>
+        </aside>
+
+        <main class="visualization-area">
+            <div class="canvas-panel">
+                <div class="canvas-item">
+                    <span>Entrada A</span>
+                    <canvas id="c1"></canvas>
+                    <div class="hist-container"><canvas id="h1"></canvas></div>
+                </div>
+                <div class="canvas-item">
+                    <span>Entrada B</span>
+                    <canvas id="c2"></canvas>
+                    <div class="hist-container"><canvas id="hB"></canvas></div>
+                </div>
+                <div class="canvas-item result-item">
+                    <span>Resultado</span>
+                    <canvas id="res"></canvas>
+                    <div class="hist-container"><canvas id="hRes"></canvas></div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
