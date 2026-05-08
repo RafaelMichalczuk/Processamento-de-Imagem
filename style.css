@@ -6,48 +6,145 @@
 }
 
 body {
-    margin: 0; font-family: 'Segoe UI', sans-serif;
-    background-color: var(--bg-main); color: var(--text-primary);
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
 }
 
-.container { padding: 20px; max-width: 1400px; margin: auto; }
-header { text-align: center; margin-bottom: 30px; }
-header h1 { color: var(--accent); margin: 0; }
-
-.main-layout { display: grid; grid-template-columns: 320px 1fr; gap: 20px; }
-
-.controls { background: var(--bg-panel); padding: 20px; border-radius: 10px; height: fit-content; }
-
-.upload-section { display: flex; gap: 10px; margin-bottom: 20px; }
-.drop-area { 
-    flex: 1; height: 80px; border: 2px dashed #444; border-radius: 8px;
-    display: flex; align-items: center; justify-content: center; 
-    cursor: pointer; font-size: 13px; text-align: center;
+.container {
+    padding: 20px;
+    max-width: 1400px;
+    margin: auto;
 }
 
-.constante-card { background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-input[type="range"] { width: 100%; accent-color: var(--accent); }
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
 
-.button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.button-grid h4 { grid-column: 1/-1; margin: 15px 0 5px 0; font-size: 11px; color: #888; text-transform: uppercase; }
+header h1 {
+    color: var(--accent);
+    margin: 0;
+}
 
-button { padding: 9px; border: none; border-radius: 4px; background: #333; color: white; cursor: pointer; }
-button:hover { background: var(--accent); }
+.main-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 20px;
+}
 
-.save { background: #1db954; flex: 1; padding: 12px; }
-.discard { background: #444; flex: 1; }
+.controls {
+    background: var(--bg-panel);
+    padding: 20px;
+    border-radius: 10px;
+    height: fit-content;
+}
 
-.canvas-panel { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-.canvas-item { background: var(--bg-panel); padding: 15px; border-radius: 10px; text-align: center; }
-.result-item { border: 2px solid var(--accent); }
+.upload-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
 
-canvas { max-width: 100%; height: auto; background: #000; border-radius: 4px; }
+.drop-area {
+    flex: 1;
+    height: 80px;
+    border: 2px dashed #444;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 13px;
+    text-align: center;
+}
 
-/* Gráfico com espaço para números */
-.hist-container { 
-    height: 200px; 
-    width: 100%; 
-    margin-top: 10px; 
+.constante-card {
+    background: #2a2a2a;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent);
+}
+
+.button-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.button-grid h4 {
+    grid-column: 1/-1;
+    margin: 15px 0 5px 0;
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+}
+
+button {
+    padding: 9px;
+    border: none;
+    border-radius: 4px;
+    background: #333;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: var(--accent);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.save {
+    background: #1db954;
+    flex: 1;
+    padding: 12px;
+}
+
+.discard {
+    background: #444;
+    flex: 1;
+}
+
+.canvas-panel {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.canvas-item {
+    background: var(--bg-panel);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.result-item {
+    border: 2px solid var(--accent);
+}
+
+canvas {
+    max-width: 100%;
+    height: auto;
+    background: #000;
+    border-radius: 4px;
+}
+
+.hist-container {
+    height: 200px;
+    width: 100%;
+    margin-top: 10px;
     border-top: 1px solid #333;
     padding-top: 10px;
 }
