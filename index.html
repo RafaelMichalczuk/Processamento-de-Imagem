@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDI Pro - Processador de Imagem</title>
+    <title>Processador de Imagem Profissional</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -11,7 +11,7 @@
 
 <div class="container">
     <header>
-        <h1>Processador de Imagens</h1>
+        <h1>Processamento de Imagens</h1>
         <p>Aritmética, Lógica, Transformações e Filtros Espaciais</p>
     </header>
 
@@ -66,11 +66,13 @@
                 <button onclick="executar('fMin')">Mínimo</button>
                 <button onclick="executar('fMax')">Máximo</button>
                 <button onclick="executar('fMediana')">Mediana</button>
+                <button onclick="executar('fGauss')">Gaussiano</button>
+                <button onclick="executar('fModa')">Moda</button>
             </div>
 
             <div class="action-buttons">
                 <button class="discard" onclick="location.reload()">Limpar</button>
-                <button class="save" onclick="salvar()">Salvar</button>
+                <button class="save" onclick="salvarTudo()">Salvar</button>
             </div>
         </aside>
 
