@@ -65,7 +65,9 @@ function executar(tipo) {
     }
 
     if (tipo.startsWith('f')) {
-        aplicarFiltro(p1, pr, tipo);
+        aplicarFiltro(p1, pr, tipo, C);
+    } else if (tipo.startsWith('m')) {
+        aplicarMorfologia(p1, pr, tipo, C);
     } else if (tipo === 'flipH' || tipo === 'flipV') {
         ctxR.save();
         if (tipo === 'flipH') { ctxR.translate(300, 0); ctxR.scale(-1, 1); }
@@ -103,10 +105,18 @@ function executar(tipo) {
     updateHist(res, chartRes);
 }
 
-function aplicarFiltro(ent, sai, tipo) {
-    const kG = [1, 2, 1, 2, 4, 2, 1, 2, 1];
+function aplicarFiltro(ent, sai, tipo, paramC) {
+    const kG = [1, 2, 1, 2, 4, 2, 1, 2, 1]; 
+    const kSobelX = [-1, 0, 1, -2, 0, 2, -1, 0, 1];
+    const kSobelY = [-1, -2, -1, 0, 0, 0, 1, 2, 1];
+    const kPrewittX = [-1, 0, 1, -1, 0, 1, -1, 0, 1];
+    const kPrewittY = [-1, -1, -1, 0, 0, 0, 1, 1, 1];
+    const kLaplace = [0, 1, 0, 1, -4, 1, 0, 1, 0];
+
     for (let y = 0; y < 300; y++) {
         for (let x = 0; x < 300; x++) {
+            let i = (y * 300 + x) * 4;
+
             let vR = [], vG = [], vB = [];
             for (let ky = -1; ky <= 1; ky++) {
                 for (let kx = -1; kx <= 1; kx++) {
@@ -115,32 +125,138 @@ function aplicarFiltro(ent, sai, tipo) {
                     vR.push(ent[idx]); vG.push(ent[idx + 1]); vB.push(ent[idx + 2]);
                 }
             }
-            let i = (y * 300 + x) * 4;
-            if (tipo === 'fMedia') {
-                sai[i] = vR.reduce((a, b) => a + b) / 9; sai[i + 1] = vG.reduce((a, b) => a + b) / 9; sai[i + 2] = vB.reduce((a, b) => a + b) / 9;
+
+            if (tipo === 'fMean') {
+                sai[i] = vR.reduce((a, b) => a + b) / 9; 
+                sai[i + 1] = vG.reduce((a, b) => a + b) / 9; 
+                sai[i + 2] = vB.reduce((a, b) => a + b) / 9;
+            } else if (tipo === 'fMin') {
+                const minVal = a => [...a].sort((a, b) => a - b)[0];
+                sai[i] = minVal(vR); sai[i + 1] = minVal(vG); sai[i + 2] = minVal(vB);
+            } else if (tipo === 'fMax') {
+                const maxVal = a => [...a].sort((a, b) => a - b)[8];
+                sai[i] = maxVal(vR); sai[i + 1] = maxVal(vG); sai[i + 2] = maxVal(vB);
+            } else if (tipo === 'fMediana') {
+                const med = a => [...a].sort((a, b) => a - b)[4]; 
+                sai[i] = med(vR); sai[i + 1] = med(vG); sai[i + 2] = med(vB);
+            } else if (tipo === 'fOrdem') {
+                let rankIdx = Math.min(8, Math.floor((paramC / 255) * 9));
+                const ordVal = a => [...a].sort((a, b) => a - b)[rankIdx];
+                sai[i] = ordVal(vR); sai[i + 1] = ordVal(vG); sai[i + 2] = ordVal(vB);
+            } else if (tipo === 'fSuavizacao') {
+                let centroR = ent[i], centroG = ent[i+1], centroB = ent[i+2];
+                let vizR = [...vR], vizG = [...vG], vizB = [...vB];
+                vizR.splice(4, 1); vizG.splice(4, 1); vizB.splice(4, 1); 
+                
+                vizR.sort((a,b)=>a-b); vizG.sort((a,b)=>a-b); vizB.sort((a,b)=>a-b);
+                sai[i] = Math.max(vizR[0], Math.min(vizR[7], centroR));
+                sai[i + 1] = Math.max(vizG[0], Math.min(vizG[7], centroG));
+                sai[i + 2] = Math.max(vizB[0], Math.min(vizB[7], centroB));
             } else if (tipo === 'fGauss') {
                 let r = 0, g = 0, b = 0;
                 vR.forEach((v, idx) => { r += v * kG[idx]; g += vG[idx] * kG[idx]; b += vB[idx] * kG[idx]; });
                 sai[i] = r / 16; sai[i + 1] = g / 16; sai[i + 2] = b / 16;
-            } else if (tipo === 'fModa') {
-                const moda = a => {
-                    let f = {}; a.forEach(v => f[v] = (f[v] || 0) + 1);
-                    return parseInt(Object.keys(f).reduce((x, y) => f[x] > f[y] ? x : y));
-                };
-                sai[i] = moda(vR); sai[i + 1] = moda(vG); sai[i + 2] = moda(vB);
-            } else {
-                const med = a => [...a].sort((a, b) => a - b)[4]; sai[i] = med(vR); sai[i + 1] = med(vG); sai[i + 2] = med(vB);
+            } else if (tipo === 'fSobel' || tipo === 'fPrewitt') {
+                let kX = (tipo === 'fSobel') ? kSobelX : kPrewittX;
+                let kY = (tipo === 'fSobel') ? kSobelY : kPrewittY;
+                
+                let rx = 0, ry = 0, gx = 0, gy = 0, bx = 0, by = 0;
+                vR.forEach((v, idx) => { rx += v * kX[idx]; ry += v * kY[idx]; });
+                vG.forEach((v, idx) => { gx += v * kX[idx]; gy += v * kY[idx]; });
+                vB.forEach((v, idx) => { bx += v * kX[idx]; by += v * kY[idx]; });
+                
+                sai[i] = Math.sqrt(rx * rx + ry * ry);
+                sai[i + 1] = Math.sqrt(gx * gx + gy * gy);
+                sai[i + 2] = Math.sqrt(bx * bx + by * by);
+            } else if (tipo === 'fLaplace') {
+                let r = 0, g = 0, b = 0;
+                vR.forEach((v, idx) => { r += v * kLaplace[idx]; g += vG[idx] * kLaplace[idx]; b += vB[idx] * kLaplace[idx]; });
+                sai[i] = r; sai[i + 1] = g; sai[i + 2] = b;
             }
+            
+            sai[i] = clamp(sai[i]);
+            sai[i + 1] = clamp(sai[i + 1]);
+            sai[i + 2] = clamp(sai[i + 2]);
             sai[i + 3] = 255;
         }
     }
 }
 
+function aplicarMorfologia(ent, sai, tipo, limiar) {
+    let bin = new Uint8Array(300 * 300);
+    for (let i = 0; i < ent.length; i += 4) {
+        let gray = (ent[i] + ent[i + 1] + ent[i + 2]) / 3;
+        bin[i / 4] = gray > limiar ? 255 : 0;
+    }
+
+    const dilat = (src, dst) => {
+        for (let y = 0; y < 300; y++) {
+            for (let x = 0; x < 300; x++) {
+                let max = 0;
+                for (let ky = -1; ky <= 1; ky++) {
+                    for (let kx = -1; kx <= 1; kx++) {
+                        if (Math.abs(kx) + Math.abs(ky) > 1) continue; 
+                        let py = Math.min(299, Math.max(0, y + ky)), px = Math.min(299, Math.max(0, x + kx));
+                        let val = src[py * 300 + px];
+                        if (val > max) max = val;
+                    }
+                }
+                dst[y * 300 + x] = max;
+            }
+        }
+    };
+
+    const eros = (src, dst) => {
+        for (let y = 0; y < 300; y++) {
+            for (let x = 0; x < 300; x++) {
+                let min = 255;
+                for (let ky = -1; ky <= 1; ky++) {
+                    for (let kx = -1; kx <= 1; kx++) {
+                        if (Math.abs(kx) + Math.abs(ky) > 1) continue; 
+                        let py = Math.min(299, Math.max(0, y + ky)), px = Math.min(299, Math.max(0, x + kx));
+                        let val = src[py * 300 + px];
+                        if (val < min) min = val;
+                    }
+                }
+                dst[y * 300 + x] = min;
+            }
+        }
+    };
+
+    let temp1 = new Uint8Array(300 * 300);
+    let temp2 = new Uint8Array(300 * 300);
+
+    if (tipo === 'mDilatacao') {
+        dilat(bin, temp1);
+    } else if (tipo === 'mErosao') {
+        eros(bin, temp1);
+    } else if (tipo === 'mAbertura') {
+        eros(bin, temp2);
+        dilat(temp2, temp1);
+    } else if (tipo === 'mFechamento') {
+        dilat(bin, temp2);
+        eros(temp2, temp1);
+    } else if (tipo === 'mContorno') {
+        eros(bin, temp2);
+        for (let j = 0; j < bin.length; j++) {
+            temp1[j] = bin[j] - temp2[j];
+        }
+    }
+
+    for (let j = 0; j < temp1.length; j++) {
+        let idx = j * 4;
+        sai[idx] = temp1[j];
+        sai[idx + 1] = temp1[j];
+        sai[idx + 2] = temp1[j];
+        sai[idx + 3] = 255;
+    }
+}
+
 function equalizar(ent, sai) {
-    let hist = new Array(256).fill(0);
-    for (let i = 0; i < ent.length; i += 4) hist[Math.round((ent[i] + ent[i + 1] + ent[i + 2]) / 3)]++;
-    let cdf = new Array(256).fill(0); cdf[0] = hist[0];
-    for (let i = 1; i < 256; i++) cdf[i] = cdf[i - 1] + hist[i];
+    let htmlHist = new Array(256).fill(0);
+    for (let i = 0; i < ent.length; i += 4) htmlHist[Math.round((ent[i] + ent[i + 1] + ent[i + 2]) / 3)]++;
+    let cdf = new Array(256).fill(0); cdf[0] = htmlHist[0];
+    for (let i = 1; i < 256; i++) cdf[i] = cdf[i - 1] + htmlHist[i];
     let min = cdf.find(x => x > 0), tot = 300 * 300;
     for (let i = 0; i < ent.length; i += 4) {
         let g = Math.round((ent[i] + ent[i + 1] + ent[i + 2]) / 3);
@@ -152,19 +268,17 @@ function equalizar(ent, sai) {
 function salvarTudo() {
     if (res.width === 0) return;
 
-    // 1. Salva a imagem do resultado
     const linkImg = document.createElement('a');
     linkImg.download = 'resultado_visual.png';
     linkImg.href = res.toDataURL();
     linkImg.click();
 
-    // 2. Gera a imagem da MATRIZ (Zoom no topo esquerdo)
     const data = res.getContext('2d').getImageData(0, 0, 300, 300).data;
     const matCanvas = document.createElement('canvas');
     const mCtx = matCanvas.getContext('2d');
 
-    const celula = 40; // Tamanho de cada quadradinho
-    const tamAmostra = 15; // Vamos mostrar uma matriz 15x15 para caber na tela
+    const celula = 40; 
+    const tamAmostra = 15; 
 
     matCanvas.width = tamAmostra * celula;
     matCanvas.height = tamAmostra * celula;
@@ -179,15 +293,12 @@ function salvarTudo() {
             let r = data[i], g = data[i + 1], b = data[i + 2];
             let cinza = Math.round((r + g + b) / 3);
 
-            // Fundo colorido
             mCtx.fillStyle = `rgb(${r},${g},${b})`;
             mCtx.fillRect(x * celula, y * celula, celula, celula);
 
-            // Grade
             mCtx.strokeStyle = "rgba(0,0,0,0.2)";
             mCtx.strokeRect(x * celula, y * celula, celula, celula);
 
-            // Texto (contraste automático)
             mCtx.fillStyle = (cinza > 125) ? "black" : "white";
             mCtx.fillText(cinza, (x * celula) + (celula / 2), (y * celula) + (celula / 2));
         }
