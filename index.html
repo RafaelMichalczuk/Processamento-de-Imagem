@@ -29,7 +29,7 @@
             </div>
 
             <div class="constante-card">
-                <label>Constante (C): <b id="valC">128</b></label>
+                <label>Constante (C): <b id="valC">100</b></label>
                 <input type="range" id="rangeC" min="0" max="255" value="128">
             </div>
 
@@ -41,7 +41,7 @@
                 <button onclick="executar('media')">Média (Img)</button>
                 <button onclick="executar('blend')">Blending</button>
                 
-                <h4>Operações com C</h4>
+                <h4>Operações C</h4>
                 <button onclick="executar('addC')">Brilho (+C)</button>
                 <button onclick="executar('subC')">Brilho (-C)</button>
                 <button onclick="executar('multC')">Contraste (*C)</button>
@@ -61,13 +61,26 @@
                 <button onclick="executar('xor')">XOR</button>
                 <button onclick="executar('not')">NOT (A)</button>
 
-                <h4>Filtros (3x3)</h4>
-                <button onclick="executar('fMedia')">Média</button>
-                <button onclick="executar('fMin')">Mínimo</button>
-                <button onclick="executar('fMax')">Máximo</button>
-                <button onclick="executar('fMediana')">Mediana</button>
-                <button onclick="executar('fGauss')">Gaussiano</button>
-                <button onclick="executar('fModa')">Moda</button>
+                <h4>Filtros Passa-Baixa</h4>
+                <button onclick="executar('fMax')">MAX</button>
+                <button onclick="executar('fMin')">MIN</button>
+                <button onclick="executar('fMean')">Média</button>
+                <button onclick="executar('fMediana')">MEDIANA</button>
+                <button onclick="executar('fOrdem')">ORDEM</button>
+                <button onclick="executar('fSuavizacao')">SUAVIZAÇÃO CONSERVATIVA</button>
+                <button onclick="executar('fGauss')">GAUSSIANO</button>
+
+                <h4>Filtros Passa-Alta</h4>
+                <button onclick="executar('fPrewitt')">Prewitt</button>
+                <button onclick="executar('fSobel')">Sobel</button>
+                <button onclick="executar('fLaplace')">Laplaciano</button>
+
+                <h4>Operações Morfológicas</h4>
+                <button onclick="executar('mDilatacao')">Dilatação</button>
+                <button onclick="executar('mErosao')">Erosão</button>
+                <button onclick="executar('mAbertura')">Abertura</button>
+                <button onclick="executar('mFechamento')">Fechamento</button>
+                <button onclick="executar('mContorno')">Contorno</button>
             </div>
 
             <div class="action-buttons">
