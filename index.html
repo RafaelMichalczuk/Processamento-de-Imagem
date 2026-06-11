@@ -17,70 +17,104 @@
 
     <div class="main-layout">
         <aside class="controls">
+            <div class="section-title">Fontes de Entrada</div>
             <div class="upload-section">
                 <div class="drop-area" onclick="upload1.click()">
-                    <p>Imagem A</p>
+                    <p>Img A</p>
                     <input type="file" id="upload1" hidden>
                 </div>
                 <div class="drop-area" onclick="upload2.click()">
-                    <p>Imagem B</p>
+                    <p>Img B</p>
                     <input type="file" id="upload2" hidden>
                 </div>
             </div>
 
             <div class="constante-card">
-                <label>Constante (C): <b id="valC">100</b></label>
+                <div class="slider-header">
+                    <label>Constante (C)</label>
+                    <span class="badge-value" id="valC">128</span>
+                </div>
                 <input type="range" id="rangeC" min="0" max="255" value="128">
             </div>
 
-            <div class="button-grid">
-                <h4>Aritméticas</h4>
-                <button onclick="executar('soma')">A + B</button>
-                <button onclick="executar('sub')">A - B</button>
-                <button onclick="executar('dif')">Diferença</button>
-                <button onclick="executar('media')">Média (Img)</button>
-                <button onclick="executar('blend')">Blending</button>
+            <div class="menu-accordion">
                 
-                <h4>Operações C</h4>
-                <button onclick="executar('addC')">Brilho (+C)</button>
-                <button onclick="executar('subC')">Brilho (-C)</button>
-                <button onclick="executar('multC')">Contraste (*C)</button>
-                <button onclick="executar('divC')">Contraste (/C)</button>
+                <details open>
+                    <summary>Aritméticas</summary>
+                    <div class="details-content">
+                        <button onclick="executar('soma')">A + B</button>
+                        <button onclick="executar('sub')">A - B</button>
+                        <button onclick="executar('dif')">Diferença</button>
+                        <button onclick="executar('media')">Média (Img)</button>
+                        <button class="full-width" onclick="executar('blend')">Blending</button>
+                    </div>
+                </details>
 
-                <h4>Transformações</h4>
-                <button onclick="executar('gray')">Cinza</button>
-                <button onclick="executar('neg')">Negativo</button>
-                <button onclick="executar('flipH')">Espelhar H</button>
-                <button onclick="executar('flipV')">Espelhar V</button>
-                <button onclick="executar('threshold')">Limiar</button>
-                <button onclick="executar('histEq')">Equalizar</button>
+                <details>
+                    <summary>Operações C</summary>
+                    <div class="details-content">
+                        <button onclick="executar('addC')">Brilho (+C)</button>
+                        <button onclick="executar('subC')">Brilho (-C)</button>
+                        <button onclick="executar('multC')">Contraste (*C)</button>
+                        <button onclick="executar('divC')">Contraste (/C)</button>
+                    </div>
+                </details>
 
-                <h4>Lógicas (Binárias)</h4>
-                <button onclick="executar('and')">AND</button>
-                <button onclick="executar('or')">OR</button>
-                <button onclick="executar('xor')">XOR</button>
-                <button onclick="executar('not')">NOT (A)</button>
+                <details>
+                    <summary>Transformações</summary>
+                    <div class="details-content">
+                        <button onclick="executar('gray')">Cinza</button>
+                        <button onclick="executar('neg')">Negativo</button>
+                        <button onclick="executar('flipH')">Espelhar H</button>
+                        <button onclick="executar('flipV')">Espelhar V</button>
+                        <button onclick="executar('threshold')">Limiar</button>
+                        <button onclick="executar('histEq')">Equalizar</button>
+                    </div>
+                </details>
 
-                <h4>Filtros Passa-Baixa</h4>
-                <button onclick="executar('fMax')">MAX</button>
-                <button onclick="executar('fMin')">MIN</button>
-                <button onclick="executar('fMean')">Média</button>
-                <button onclick="executar('fMediana')">MEDIANA</button>
-                <button onclick="executar('fOrdem')">ORDEM</button>
-                <button onclick="executar('fSuavizacao')">SUAVIZAÇÃO CONSERVATIVA</button>
-                <button onclick="executar('fGauss')">GAUSSIANO</button>
+                <details>
+                    <summary>Lógicas (Binárias)</summary>
+                    <div class="details-content">
+                        <button onclick="executar('and')">AND</button>
+                        <button onclick="executar('or')">OR</button>
+                        <button onclick="executar('xor')">XOR</button>
+                        <button onclick="executar('not')">NOT (A)</button>
+                    </div>
+                </details>
 
-                <h4>Filtros Passa-Alta</h4>
-                <button onclick="executar('fPrewitt')">Prewitt</button>
-                <button onclick="executar('fSobel')">Sobel</button>
-                <button onclick="executar('fLaplace')">Laplaciano</button>
+                <details>
+                    <summary>Filtros Passa-Baixa</summary>
+                    <div class="details-content">
+                        <button onclick="executar('fMax')">MAX</button>
+                        <button onclick="executar('fMin')">MIN</button>
+                        <button onclick="executar('fMean')">Média</button>
+                        <button onclick="executar('fMediana')">MEDIANA</button>
+                        <button onclick="executar('fOrdem')">ORDEM</button>
+                        <button onclick="executar('fGauss')">GAUSSIANO</button>
+                        <button class="full-width" onclick="executar('fSuavizacao')">SUAVIZAÇÃO CONSERVATIVA</button>
+                    </div>
+                </details>
 
-                <h4>Operações Morfológicas</h4>
-                <button onclick="executar('mDilatacao')">Dilatação</button>
-                <button onclick="executar('mErosao')">Erosão</button>
-                <button onclick="executar('mAbertura')">Abertura</button>
-                <button onclick="executar('mFechamento')">Fechamento</button>
-                <button onclick="executar('mContorno')">Contorno</button>
+                <details>
+                    <summary>Filtros Passa-Alta</summary>
+                    <div class="details-content">
+                        <button onclick="executar('fPrewitt')">Prewitt</button>
+                        <button onclick="executar('fSobel')">Sobel</button>
+                        <button class="full-width" onclick="executar('fLaplace')">Laplaciano</button>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>Morfologia</summary>
+                    <div class="details-content">
+                        <button onclick="executar('mDilatacao')">Dilatação</button>
+                        <button onclick="executar('mErosao')">Erosão</button>
+                        <button onclick="executar('mAbertura')">Abertura</button>
+                        <button onclick="executar('mFechamento')">Fechamento</button>
+                        <button class="full-width" onclick="executar('mContorno')">Contorno</button>
+                    </div>
+                </details>
+
             </div>
 
             <div class="action-buttons">
