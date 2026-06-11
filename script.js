@@ -2,7 +2,10 @@ const c1 = document.getElementById('c1'), c2 = document.getElementById('c2'), re
 const range = document.getElementById('rangeC'), val = document.getElementById('valC');
 let chart1, chartB, chartRes;
 
+// Sincroniza o valor inicial e o evento de input do slider (C)
+val.innerText = range.value;
 range.oninput = () => val.innerText = range.value;
+
 const clamp = v => Math.max(0, Math.min(255, Math.round(v)));
 
 function initChart(id) {
@@ -10,7 +13,7 @@ function initChart(id) {
         type: 'bar',
         data: {
             labels: Array.from({ length: 256 }, (_, i) => i),
-            datasets: [{ label: 'Pixels', data: [], backgroundColor: '#00adb5', barPercentage: 1.0, categoryPercentage: 1.0 }]
+            datasets: [{ label: 'Pixels', data: [], backgroundColor: '#3cd1dc', barPercentage: 1.0, categoryPercentage: 1.0 }]
         },
         options: {
             maintainAspectRatio: false,
